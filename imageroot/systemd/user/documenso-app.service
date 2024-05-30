@@ -1,0 +1,37 @@
+#
+# Copyright (C) 2022 Nethesis S.r.l.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+[Unit]
+Description=Podman  documenso-app.service
+BindsTo=documenso.service
+After=documenso.service postgresql-app.service
+
+[Service]
+Environment=PODMAN_SYSTEMD_UNIT=%n
+EnvironmentFile=%S/state/environment
+EnvironmentFile=-%S/state/smarthost.env
+WorkingDirectory=%S/state
+Restart=always
+TimeoutStopSec=70
+ExecStartPre=/bin/mkdir -p config
+ExecStartPre=/bin/rm -f %t/documenso-app.pid %t/documenso-app.ctr-id
+ExecStartPre=-runagent discover-smarthost
+ExecStart=/usr/bin/podman run --conmon-pidfile %t/documenso-app.pid \
+    --cidfile %t/documenso-app.ctr-id --cgroups=no-conmon \
+    --pod-id-file %t/documenso.pod-id --replace -d --name  documenso-app \
+    --volume documenso-app:/var/www/html/:Z \
+    --volume ./config:/tmp:Z \
+    --env=NGINX_* \
+    --env 'CONFIG_DATABASE_URI="postgresql://postgres:Nethesis,1234@127.0.0.1:5432/documenso"' \
+    ${NGINX_IMAGE}
+ExecStop=/usr/bin/podman stop --ignore --cidfile %t/documenso-app.ctr-id -t 10
+ExecReload=/usr/bin/podman kill -s HUP documenso-app
+SyslogIdentifier=%u
+ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/documenso-app.ctr-id
+PIDFile=%t/documenso-app.pid
+Type=forking
+
+[Install]
+WantedBy=default.target
