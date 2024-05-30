@@ -18,14 +18,25 @@ data = json.load(sys.stdin)
 # Upper case to set environment variable and minor case to read from stdin
 
 # this values must exists in the json stdin
-# agent.set_env("MAIL_SERVER", data["mail_server"])
-# agent.set_env("LDAP_DOMAIN", data["ldap_domain"])
 
-# you can add default values for the following variables
-# agent.set_env("MAIL_DOMAIN",data.get("mail_domain",""))
-# agent.set_env("WOWORKERSCOUNT",data.get("workers_count",3))
-# agent.set_env("AUXILIARYACCOUNT",data.get("auxiliary_account",True))
-# agent.set_env("ACTIVESYNC",data.get("activesync",False))
+POSTGRES_DB = data.get("POSTGRES_DB", "documenso")
+POSTGRES_USER = data.get("POSTGRES_USER", "postgres")
+POSTGRES_PASSWORD = data.get("POSTGRES_PASSWORD", "Nethesis1234")
+POSTGRES_HOST = data.get("POSTGRES_HOST", "localhost")
+POSTGRES_PORT = data.get("POSTGRES_PORT", "5432")
+POSTGRES_NON_ROOT_USER = data.get("POSTGRES_NON_ROOT_USER","documenso")
+POSTGRES_NON_ROOT_PASSWORD = data.get("POSTGRES_NON_ROOT_PASSWORD","Nethesis1234")
+
+db_config = {
+    "POSTGRES_DB": POSTGRES_DB,
+    "POSTGRES_USER": POSTGRES_USER,
+    "POSTGRES_PASSWORD": f'{POSTGRES_PASSWORD}',
+    "POSTGRES_ROOT_HOST": POSTGRES_HOST,
+    "POSTGRES_PORT": POSTGRES_PORT,
+    "POSTGRES_NON_ROOT_USER": POSTGRES_NON_ROOT_USER,
+    "POSTGRES_NON_ROOT_PASSWORD": f'{POSTGRES_NON_ROOT_PASSWORD}',
+}
+agent.write_envfile("database.env", db_config)
 
 
 # Make sure everything is saved inside the environment file
