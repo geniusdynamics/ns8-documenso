@@ -22,7 +22,8 @@ ExecStartPre=/bin/rm -f %t/documenso.pid %t/documenso.pod-id
 ExecStartPre=/usr/bin/podman pod create --infra-conmon-pidfile %t/documenso.pid \
     --pod-id-file %t/documenso.pod-id \
     --name documenso \
-    --publish 127.0.0.1:${TCP_PORT}:3000 \
+    --publish 127.0.0.1:${TCP_PORT_WEB}:3000 \
+    --publish 127.0.0.1:${TCP_PORT_MARKETING}:3001 \
     --replace
 ExecStart=/usr/bin/podman pod start --pod-id-file %t/documenso.pod-id
 ExecStop=/usr/bin/podman pod stop --ignore --pod-id-file %t/documenso.pod-id -t 10
