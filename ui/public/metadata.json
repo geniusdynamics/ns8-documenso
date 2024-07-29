@@ -1,19 +1,19 @@
 {
-  "name": "documenso",
+  "name": "Documenso",
   "description": {
-    "en": "My documenso module"
+    "en": "Document igning Finally Opensource"
   },
   "categories": [],
   "authors": [
     {
-      "name": "Name Surname",
-      "email": "author@yourmail.org"
+      "name": "Genius Dynamics",
+      "email": "support@genius.ke"
     }
   ],
   "docs": {
     "documentation_url": "https://docs.documenso.com/",
-    "bug_url": "https://github.com/NethServer/dev",
-    "code_url": "https://github.com/author/ns8-documenso"
+    "bug_url": "https://github.com/geniusdynamics/dev",
+    "code_url": "https://github.com/geniusdynamics/ns8-documenso"
   },
-  "source": "ghcr.io/nethserver/documenso"
+  "source": "ghcr.io/geniusdynamics/documenso"
 }
