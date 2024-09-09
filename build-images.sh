@@ -14,7 +14,7 @@ images=()
 repobase="${REPOBASE:-ghcr.io/geniusdynamics}"
 # Configure the image name
 reponame="documenso"
-APP_VERSION="v1.6.0"
+APP_VERSION="v1.7.0"
 
 # Create a new empty container image
 container=$(buildah from scratch)
