@@ -8,4 +8,4 @@
 set -e
 
 echo "Dumping documenso postgres database"
-podman exec postgresql-app pg_dump -U postgres --format=c  documenso > documenso.pg_dump
+podman exec postgresql-app pg_dump -U documenso --format=c  documenso > documenso.pg_dump

@@ -27,10 +27,8 @@ podman run \
     --volume=./restore:/docker-entrypoint-initdb.d/:Z \
     --volume=postgres-data:/var/lib/postgresql/data:Z \
     --replace --name=restore_db \
-    --env POSTGRES_USER=postgres \
-    --env POSTGRES_PASSWORD=Nethesis,1234 \
-    --env POSTGRES_DB=documenso \
-    --env TZ=UTC \
+    --env-file=database.env \
+        --env TZ=UTC \
     "${POSTGRES_IMAGE}" < documenso.pg_dump
 
 # If the restore is successful, clean up:
