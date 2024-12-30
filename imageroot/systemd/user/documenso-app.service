@@ -24,9 +24,8 @@ ExecStart=/usr/bin/podman run --conmon-pidfile %t/documenso-app.pid \
     --cidfile %t/documenso-app.ctr-id --cgroups=no-conmon \
     --pod-id-file %t/documenso.pod-id --replace -d --name  documenso-app \
     --volume documenso-cert:/opt/documenso/cert.p12:Z \
-    --env=NEXT* \
-    --env NEXT_PRIVATE_DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_ROOT_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}" \
-    --env NEXT_PRIVATE_DIRECT_DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_ROOT_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}" \
+    --env-file="documenso-db.env" \
+    --env-file="documenso.env" \
     ${DOCUMENSO_IMAGE}
 ExecStop=/usr/bin/podman stop --ignore --cidfile %t/documenso-app.ctr-id -t 10
 ExecReload=/usr/bin/podman kill -s HUP documenso-app
