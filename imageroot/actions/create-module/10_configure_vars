@@ -1,0 +1,54 @@
+#!/usr/bin/env python3
+
+#
+# Copyright (C) 2022 Nethesis S.r.l.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+import base64
+import json
+import os
+import secrets
+import sys
+
+import agent
+
+# Try to parse the stdin as JSON.
+# If parsing fails, output everything to stderr
+data = json.load(sys.stdin)
+
+# This is specific to you module, so you need to change it accordingly.
+
+
+def generate_random_password(length):
+    # Generate random bytes and convert them to a hexadecimal string
+    random_bytes = os.urandom(length)
+    password = random_bytes.hex()
+    return password[:length]
+
+
+POSTGRES_PASSWORD = generate_random_password(16)
+POSTGRES_DB = "documenso"
+POSTGRES_USER = "documenso"
+db_config = {
+    "POSTGRES_PASSWORD": POSTGRES_PASSWORD,
+    "POSTGRES_DB": POSTGRES_DB,
+    "POSTGRES_USER": POSTGRES_USER,
+}
+
+agent.write_envfile("database.env", db_config)
+
+NEXTAUTH_SECRET = secrets.token_hex(16)
+NEXT_PRIVATE_ENCRYPTION_KEY = secrets.token_hex(32)
+NEXT_PRIVATE_ENCRYPTION_SECONDARY_KEY = secrets.token_hex(32)
+NEXT_PRIVATE_DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_ROOT_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
+NEXT_PRIVATE_DIRECT_DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_ROOT_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
+
+app_config = {
+    "NEXTAUTH_SECRET": NEXTAUTH_SECRET,
+    "NEXT_PRIVATE_ENCRYPTION_KEY": NEXT_PRIVATE_ENCRYPTION_KEY,
+    "NEXT_PRIVATE_ENCRYPTION_SECONDARY_KEY": NEXT_PRIVATE_ENCRYPTION_SECONDARY_KEY,
+    "NEXT_PRIVATE_DATABASE_URL": NEXT_PRIVATE_DATABASE_URL,
+    "NEXT_PRIVATE_DIRECT_DATABASE_URL": NEXT_PRIVATE_DIRECT_DATABASE_URL,
+}
+agent.write_envfile("documenso-db.env", app_config)
