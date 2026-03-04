@@ -5,22 +5,87 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-#
-# Read configuration
-#
-
 import os
 import sys
 import json
 import agent
 
-# Prepare return variable
 config = {}
 
-# Read current configuration from the environment file
-config["host"] = os.getenv("TRAEFIK_HOST","")
+config["host"] = os.getenv("TRAEFIK_HOST", "")
 config["http2https"] = os.getenv("TRAEFIK_HTTP2HTTPS") == "True"
 config["lets_encrypt"] = os.getenv("TRAEFIK_LETS_ENCRYPT") == "True"
 
-# Dump the configuration to stdout
+if os.path.exists("documenso.env"):
+    dt = agent.read_envfile("documenso.env")
+    config["smtp_transport"] = dt.get("NEXT_PRIVATE_SMTP_TRANSPORT", "smtp-auth")
+    config["smtp_host"] = dt.get("NEXT_PRIVATE_SMTP_HOST", "")
+    config["smtp_port"] = dt.get("NEXT_PRIVATE_SMTP_PORT", "587")
+    config["smtp_username"] = dt.get("NEXT_PRIVATE_SMTP_USERNAME", "")
+    config["smtp_password"] = dt.get("NEXT_PRIVATE_SMTP_PASSWORD", "")
+    config["smtp_from_name"] = dt.get("NEXT_PRIVATE_SMTP_FROM_NAME", "Documenso")
+    config["smtp_from_address"] = dt.get("NEXT_PRIVATE_SMTP_FROM_ADDRESS", "")
+    config["smtp_secure"] = dt.get("NEXT_PRIVATE_SMTP_SECURE", "false")
+    config["resend_api_key"] = dt.get("NEXT_PRIVATE_RESEND_API_KEY", "")
+    config["mailchannels_api_key"] = dt.get("NEXT_PRIVATE_MAILCHANNELS_API_KEY", "")
+
+    config["google_client_id"] = dt.get("NEXT_PRIVATE_GOOGLE_CLIENT_ID", "")
+    config["google_client_secret"] = dt.get("NEXT_PRIVATE_GOOGLE_CLIENT_SECRET", "")
+    config["microsoft_client_id"] = dt.get("NEXT_PRIVATE_MICROSOFT_CLIENT_ID", "")
+    config["microsoft_client_secret"] = dt.get("NEXT_PRIVATE_MICROSOFT_CLIENT_SECRET", "")
+    config["oidc_well_known"] = dt.get("NEXT_PRIVATE_OIDC_WELL_KNOWN", "")
+    config["oidc_client_id"] = dt.get("NEXT_PRIVATE_OIDC_CLIENT_ID", "")
+    config["oidc_client_secret"] = dt.get("NEXT_PRIVATE_OIDC_CLIENT_SECRET", "")
+    config["oidc_provider_label"] = dt.get("NEXT_PRIVATE_OIDC_PROVIDER_LABEL", "OIDC")
+
+    config["upload_transport"] = dt.get("NEXT_PUBLIC_UPLOAD_TRANSPORT", "database")
+    config["s3_endpoint"] = dt.get("NEXT_PRIVATE_UPLOAD_ENDPOINT", "")
+    config["s3_region"] = dt.get("NEXT_PRIVATE_UPLOAD_REGION", "us-east-1")
+    config["s3_bucket"] = dt.get("NEXT_PRIVATE_UPLOAD_BUCKET", "")
+    config["s3_access_key_id"] = dt.get("NEXT_PRIVATE_UPLOAD_ACCESS_KEY_ID", "")
+    config["s3_secret_access_key"] = dt.get("NEXT_PRIVATE_UPLOAD_SECRET_ACCESS_KEY", "")
+    config["s3_force_path_style"] = dt.get("NEXT_PRIVATE_UPLOAD_FORCE_PATH_STYLE", "false")
+    config["document_size_upload_limit"] = dt.get("NEXT_PUBLIC_DOCUMENT_SIZE_UPLOAD_LIMIT", "5")
+
+    config["disable_signup"] = dt.get("NEXT_PUBLIC_DISABLE_SIGNUP", "false")
+    config["feature_billing_enabled"] = dt.get("NEXT_PUBLIC_FEATURE_BILLING_ENABLED", "false")
+    config["disable_telemetry"] = dt.get("DOCUMENSO_DISABLE_TELEMETRY", "false")
+    config["posthog_key"] = dt.get("NEXT_PUBLIC_POSTHOG_KEY", "")
+
+    config["signing_local_file_path"] = dt.get("NEXT_PRIVATE_SIGNING_LOCAL_FILE_PATH", "/opt/documenso/cert.p12")
+    config["signing_passphrase"] = dt.get("NEXT_PRIVATE_SIGNING_PASSPHRASE", "")
+else:
+    config["smtp_transport"] = "smtp-auth"
+    config["smtp_host"] = ""
+    config["smtp_port"] = "587"
+    config["smtp_username"] = ""
+    config["smtp_password"] = ""
+    config["smtp_from_name"] = "Documenso"
+    config["smtp_from_address"] = ""
+    config["smtp_secure"] = "false"
+    config["resend_api_key"] = ""
+    config["mailchannels_api_key"] = ""
+    config["google_client_id"] = ""
+    config["google_client_secret"] = ""
+    config["microsoft_client_id"] = ""
+    config["microsoft_client_secret"] = ""
+    config["oidc_well_known"] = ""
+    config["oidc_client_id"] = ""
+    config["oidc_client_secret"] = ""
+    config["oidc_provider_label"] = "OIDC"
+    config["upload_transport"] = "database"
+    config["s3_endpoint"] = ""
+    config["s3_region"] = "us-east-1"
+    config["s3_bucket"] = ""
+    config["s3_access_key_id"] = ""
+    config["s3_secret_access_key"] = ""
+    config["s3_force_path_style"] = "false"
+    config["document_size_upload_limit"] = "5"
+    config["disable_signup"] = "false"
+    config["feature_billing_enabled"] = "false"
+    config["disable_telemetry"] = "false"
+    config["posthog_key"] = ""
+    config["signing_local_file_path"] = "/opt/documenso/cert.p12"
+    config["signing_passphrase"] = ""
+
 json.dump(config, fp=sys.stdout)

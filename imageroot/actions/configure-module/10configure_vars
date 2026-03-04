@@ -15,10 +15,6 @@ import agent
 # If parsing fails, output everything to stderr
 data = json.load(sys.stdin)
 
-# Generate Random Secret
-random_key = secrets.token_hex(16)
-
-SECRET = data.get("NEXTAUTH_SECRET", random_key)
 host = data.get("host")
 
 # SMTP Configuration
@@ -27,56 +23,54 @@ smtp_settings = agent.get_smarthost_settings(rdb)
 
 ## Set the default values
 SMTP_HOST = smtp_settings["host"]
-# OPTIONAL: Defines the port to use for sending emails.
 SMTP_PORT = smtp_settings["port"]
-# OPTIONAL: Defines the username to use with the SMTP server.
 SMTP_USERNAME = smtp_settings["username"]
-# OPTIONAL: Defines the password to use with the SMTP server.
 SMTP_PASSWORD = smtp_settings["password"]
 SMTP_FROM_NAME = f'"Documenso" <{smtp_settings["username"]}>'
-# REQUIRED: Defines the email address to use as the from address.
 SMTP_FROM_ADDRESS = smtp_settings["username"]
 SMTP_ENCRYPTION = "true" if smtp_settings["tls_verify"] else "false"
 
 
-NEXTAUTH_URL = data.get("NEXTAUTH_URL", f"https://{host}")
+NEXTAUTH_URL = f"https://{host}"
 
+smtp_transport = data.get("smtp_transport", "smtp-auth")
+smtp_host = data.get("smtp_host", SMTP_HOST)
+smtp_port = data.get("smtp_port", SMTP_PORT)
+smtp_username = data.get("smtp_username", SMTP_USERNAME)
+smtp_password = data.get("smtp_password", SMTP_PASSWORD)
+smtp_from_name = data.get("smtp_from_name", SMTP_FROM_NAME)
+smtp_from_address = data.get("smtp_from_address", SMTP_FROM_ADDRESS)
+smtp_secure = data.get("smtp_secure", SMTP_ENCRYPTION)
 
-NEXT_PRIVATE_GOOGLE_CLIENT_ID = data.get("NEXT_PRIVATE_GOOGLE_CLIENT_ID", "")
-NEXT_PRIVATE_GOOGLE_CLIENT_SECRET = data.get("NEXT_PRIVATE_GOOGLE_CLIENT_SECRET", "")
+NEXT_PRIVATE_GOOGLE_CLIENT_ID = data.get("google_client_id", "")
+NEXT_PRIVATE_GOOGLE_CLIENT_SECRET = data.get("google_client_secret", "")
 NEXT_PRIVATE_SIGNING_TRANSPORT = data.get("NEXT_PRIVATE_SIGNING_TRANSPORT", "local")
-NEXT_PUBLIC_WEBAPP_URL = data.get("NEXT_PUBLIC_WEBAPP_URL", f"https://{host}")
+NEXT_PUBLIC_WEBAPP_URL = f"https://{host}"
 NEXT_PUBLIC_MARKETING_URL = data.get("NEXT_PUBLIC_MARKETING_URL", "")
 
 
-NEXT_PUBLIC_UPLOAD_TRANSPORT = data.get("NEXT_PUBLIC_UPLOAD_TRANSPORT", "database")
-NEXT_PRIVATE_UPLOAD_ENDPOINT = data.get("NEXT_PRIVATE_UPLOAD_ENDPOINT", "")
-NEXT_PRIVATE_UPLOAD_FORCE_PATH_STYLE = data.get(
-    "NEXT_PRIVATE_UPLOAD_FORCE_PATH_STYLE", ""
-)
-NEXT_PRIVATE_UPLOAD_REGION = data.get("NEXT_PRIVATE_UPLOAD_REGION", "")
-NEXT_PRIVATE_UPLOAD_BUCKET = data.get("NEXT_PRIVATE_UPLOAD_BUCKET", "")
-NEXT_PRIVATE_UPLOAD_ACCESS_KEY_ID = data.get("NEXT_PRIVATE_UPLOAD_ACCESS_KEY_ID", "")
-NEXT_PRIVATE_UPLOAD_SECRET_ACCESS_KEY = data.get(
-    "NEXT_PRIVATE_UPLOAD_SECRET_ACCESS_KEY", ""
-)
+NEXT_PUBLIC_UPLOAD_TRANSPORT = data.get("upload_transport", "database")
+NEXT_PRIVATE_UPLOAD_ENDPOINT = data.get("s3_endpoint", "")
+NEXT_PRIVATE_UPLOAD_FORCE_PATH_STYLE = data.get("s3_force_path_style", "")
+NEXT_PRIVATE_UPLOAD_REGION = data.get("s3_region", "")
+NEXT_PRIVATE_UPLOAD_BUCKET = data.get("s3_bucket", "")
+NEXT_PRIVATE_UPLOAD_ACCESS_KEY_ID = data.get("s3_access_key_id", "")
+NEXT_PRIVATE_UPLOAD_SECRET_ACCESS_KEY = data.get("s3_secret_access_key", "")
 
-NEXT_PRIVATE_SMTP_TRANSPORT = data.get("NEXT_PRIVATE_SMTP_TRANSPORT", "smtp-auth")
-NEXT_PRIVATE_SMTP_HOST = data.get("NEXT_PRIVATE_SMTP_HOST", SMTP_HOST)
-NEXT_PRIVATE_SMTP_PORT = data.get("NEXT_PRIVATE_SMTP_PORT", SMTP_PORT)
-NEXT_PRIVATE_SMTP_USERNAME = data.get("NEXT_PRIVATE_SMTP_USERNAME", SMTP_USERNAME)
-NEXT_PRIVATE_SMTP_PASSWORD = data.get("NEXT_PRIVATE_SMTP_PASSWORD", SMTP_PASSWORD)
+NEXT_PRIVATE_SMTP_TRANSPORT = smtp_transport
+NEXT_PRIVATE_SMTP_HOST = smtp_host
+NEXT_PRIVATE_SMTP_PORT = smtp_port
+NEXT_PRIVATE_SMTP_USERNAME = smtp_username
+NEXT_PRIVATE_SMTP_PASSWORD = smtp_password
 NEXT_PRIVATE_SMTP_APIKEY_USER = data.get("NEXT_PRIVATE_SMTP_APIKEY_USER", "")
 NEXT_PRIVATE_SMTP_APIKEY = data.get("NEXT_PRIVATE_SMTP_APIKEY", "")
-NEXT_PRIVATE_SMTP_SECURE = data.get("NEXT_PRIVATE_SMTP_SECURE", SMTP_ENCRYPTION)
-NEXT_PRIVATE_SMTP_FROM_NAME = data.get("NEXT_PRIVATE_SMTP_FROM_NAME", SMTP_FROM_NAME)
-NEXT_PRIVATE_SMTP_FROM_ADDRESS = data.get(
-    "NEXT_PRIVATE_SMTP_FROM_ADDRESS", SMTP_FROM_ADDRESS
-)
+NEXT_PRIVATE_SMTP_SECURE = smtp_secure
+NEXT_PRIVATE_SMTP_FROM_NAME = smtp_from_name
+NEXT_PRIVATE_SMTP_FROM_ADDRESS = smtp_from_address
 
-NEXT_PRIVATE_RESEND_API_KEY = data.get("NEXT_PRIVATE_RESEND_API_KEY", "")
+NEXT_PRIVATE_RESEND_API_KEY = data.get("resend_api_key", "")
 
-NEXT_PRIVATE_MAILCHANNELS_API_KEY = data.get("NEXT_PRIVATE_MAILCHANNELS_API_KEY", "")
+NEXT_PRIVATE_MAILCHANNELS_API_KEY = data.get("mailchannels_api_key", "")
 NEXT_PRIVATE_MAILCHANNELS_ENDPOINT = data.get("NEXT_PRIVATE_MAILCHANNELS_ENDPOINT", "")
 NEXT_PRIVATE_MAILCHANNELS_DKIM_DOMAIN = data.get(
     "NEXT_PRIVATE_MAILCHANNELS_DKIM_DOMAIN", ""
@@ -88,20 +82,40 @@ NEXT_PRIVATE_MAILCHANNELS_DKIM_PRIVATE_KEY = data.get(
     "NEXT_PRIVATE_MAILCHANNELS_DKIM_PRIVATE_KEY", ""
 )
 
-NEXT_PUBLIC_DOCUMENT_SIZE_UPLOAD_LIMIT = data.get(
-    "NEXT_PUBLIC_DOCUMENT_SIZE_UPLOAD_LIMIT"
-)
-
-NEXT_PUBLIC_POSTHOG_KEY = data.get("NEXT_PUBLIC_POSTHOG_KEY", "")
-NEXT_PUBLIC_DISABLE_SIGNUP = data.get("NEXT_PUBLIC_DISABLE_SIGNUP", "")
 NEXT_PRIVATE_SIGNING_LOCAL_FILE_PATH = data.get(
-    "NEXT_PRIVATE_SIGNING_LOCAL_FILE_PATH", "/opt/documenso/cert.p12"
+    "signing_local_file_path", "/opt/documenso/cert.p12"
+)
+NEXT_PRIVATE_SIGNING_PASSPHRASE = data.get("signing_passphrase", "")
+
+NEXT_PRIVATE_INTERNAL_WEBAPP_URL = NEXTAUTH_URL
+
+# Microsoft OAuth
+NEXT_PRIVATE_MICROSOFT_CLIENT_ID = data.get("microsoft_client_id", "")
+NEXT_PRIVATE_MICROSOFT_CLIENT_SECRET = data.get("microsoft_client_secret", "")
+
+# OIDC
+NEXT_PRIVATE_OIDC_WELL_KNOWN = data.get("oidc_well_known", "")
+NEXT_PRIVATE_OIDC_CLIENT_ID = data.get("oidc_client_id", "")
+NEXT_PRIVATE_OIDC_CLIENT_SECRET = data.get("oidc_client_secret", "")
+NEXT_PRIVATE_OIDC_PROVIDER_LABEL = data.get("oidc_provider_label", "OIDC")
+NEXT_PRIVATE_OIDC_SKIP_VERIFY = data.get("NEXT_PRIVATE_OIDC_SKIP_VERIFY", "false")
+NEXT_PRIVATE_OIDC_PROMPT = data.get("NEXT_PRIVATE_OIDC_PROMPT", "login")
+
+# Feature Flags
+NEXT_PUBLIC_DISABLE_SIGNUP = data.get("disable_signup", "false")
+NEXT_PUBLIC_FEATURE_BILLING_ENABLED = data.get("feature_billing_enabled", "false")
+
+# Analytics
+NEXT_PUBLIC_POSTHOG_KEY = data.get("posthog_key", "")
+
+# Telemetry
+DOCUMENSO_DISABLE_TELEMETRY = data.get("disable_telemetry", "false")
+
+# Document settings
+NEXT_PUBLIC_DOCUMENT_SIZE_UPLOAD_LIMIT = data.get(
+    "document_size_upload_limit", "5"
 )
 
-NEXT_PRIVATE_INTERNAL_WEBAPP_URL = data.get(
-    "NEXT_PRIVATE_INTERNAL_WEBAPP_URL", NEXTAUTH_URL
-)
-# NEXT_PUBLIC_WEBAPP_URL = data.get("NEXT_PUBLIC_WEBAPP_URL", NEXTAUTH_URL)
 next_config = {
     "NEXTAUTH_URL": NEXTAUTH_URL,
     "NEXT_PRIVATE_GOOGLE_CLIENT_ID": NEXT_PRIVATE_GOOGLE_CLIENT_ID,
@@ -135,7 +149,18 @@ next_config = {
     "NEXT_PUBLIC_POSTHOG_KEY": NEXT_PUBLIC_POSTHOG_KEY,
     "NEXT_PUBLIC_DISABLE_SIGNUP": NEXT_PUBLIC_DISABLE_SIGNUP,
     "NEXT_PRIVATE_SIGNING_LOCAL_FILE_PATH": NEXT_PRIVATE_SIGNING_LOCAL_FILE_PATH,
+    "NEXT_PRIVATE_SIGNING_PASSPHRASE": NEXT_PRIVATE_SIGNING_PASSPHRASE,
     "NEXT_PRIVATE_INTERNAL_WEBAPP_URL": NEXT_PRIVATE_INTERNAL_WEBAPP_URL,
+    "NEXT_PRIVATE_MICROSOFT_CLIENT_ID": NEXT_PRIVATE_MICROSOFT_CLIENT_ID,
+    "NEXT_PRIVATE_MICROSOFT_CLIENT_SECRET": NEXT_PRIVATE_MICROSOFT_CLIENT_SECRET,
+    "NEXT_PRIVATE_OIDC_WELL_KNOWN": NEXT_PRIVATE_OIDC_WELL_KNOWN,
+    "NEXT_PRIVATE_OIDC_CLIENT_ID": NEXT_PRIVATE_OIDC_CLIENT_ID,
+    "NEXT_PRIVATE_OIDC_CLIENT_SECRET": NEXT_PRIVATE_OIDC_CLIENT_SECRET,
+    "NEXT_PRIVATE_OIDC_PROVIDER_LABEL": NEXT_PRIVATE_OIDC_PROVIDER_LABEL,
+    "NEXT_PRIVATE_OIDC_SKIP_VERIFY": NEXT_PRIVATE_OIDC_SKIP_VERIFY,
+    "NEXT_PRIVATE_OIDC_PROMPT": NEXT_PRIVATE_OIDC_PROMPT,
+    "NEXT_PUBLIC_FEATURE_BILLING_ENABLED": NEXT_PUBLIC_FEATURE_BILLING_ENABLED,
+    "DOCUMENSO_DISABLE_TELEMETRY": DOCUMENSO_DISABLE_TELEMETRY,
 }
 
 agent.write_envfile("documenso.env", next_config)
