@@ -87,7 +87,7 @@ NEXT_PRIVATE_SIGNING_LOCAL_FILE_PATH = data.get(
 )
 NEXT_PRIVATE_SIGNING_PASSPHRASE = data.get("signing_passphrase", "")
 
-NEXT_PRIVATE_INTERNAL_WEBAPP_URL = NEXTAUTH_URL
+NEXT_PRIVATE_INTERNAL_WEBAPP_URL = "http://localhost:3000"
 
 # Microsoft OAuth
 NEXT_PRIVATE_MICROSOFT_CLIENT_ID = data.get("microsoft_client_id", "")
@@ -112,9 +112,7 @@ NEXT_PUBLIC_POSTHOG_KEY = data.get("posthog_key", "")
 DOCUMENSO_DISABLE_TELEMETRY = data.get("disable_telemetry", "false")
 
 # Document settings
-NEXT_PUBLIC_DOCUMENT_SIZE_UPLOAD_LIMIT = data.get(
-    "document_size_upload_limit", "5"
-)
+NEXT_PUBLIC_DOCUMENT_SIZE_UPLOAD_LIMIT = data.get("document_size_upload_limit", "5")
 
 next_config = {
     "NEXTAUTH_URL": NEXTAUTH_URL,
