@@ -10,16 +10,14 @@ After=documenso.service postgresql-app.service
 
 [Service]
 Environment=PODMAN_SYSTEMD_UNIT=%n
-EnvironmentFile=%S/state/environment
-EnvironmentFile=-%S/state/smarthost.env
-EnvironmentFile=-%S/state/database.env
-EnvironmentFile=-%S/state/documenso.env
-WorkingDirectory=%S/state
+EnvironmentFile=%E/state/environment
+EnvironmentFile=-%E/state/database.env
+EnvironmentFile=-%E/state/documenso.env
+WorkingDirectory=%E/state
 Restart=always
 TimeoutStopSec=70
 ExecStartPre=/bin/mkdir -p config
 ExecStartPre=/bin/rm -f %t/documenso-app.pid %t/documenso-app.ctr-id
-ExecStartPre=-runagent discover-smarthost
 ExecStart=/usr/bin/podman run --conmon-pidfile %t/documenso-app.pid \
     --cidfile %t/documenso-app.ctr-id --cgroups=no-conmon \
     --pod-id-file %t/documenso.pod-id --replace -d --name  documenso-app \
