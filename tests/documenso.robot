@@ -2,7 +2,7 @@
 Library    SSHLibrary
 
 *** Variables ***
-${HOST}    .example.org
+${HOST}    documenso.example.org
 ${ADMIN_USER}    admin
 ${ADMIN_PASSWORD}    Nethesis,1234
 ${module_id}    ${EMPTY}
