@@ -18,7 +18,7 @@ reponame="documenso"
 # renovate: datasource=npm packageName=corepack
 corepack_version=0.36.0
 # renovate: datasource=docker packageName=docker.io/documenso/documenso
-APP_VERSION=v2.13.0
+APP_VERSION=v2.22.0
 
 # Create a new empty container image
 container=$(buildah from scratch)
