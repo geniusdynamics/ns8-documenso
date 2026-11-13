@@ -15,6 +15,7 @@ EnvironmentFile=-%E/state/database.env
 EnvironmentFile=-%E/state/documenso.env
 WorkingDirectory=%E/state
 Restart=always
+RestartSec=10
 TimeoutStopSec=70
 ExecStartPre=/bin/mkdir -p config
 ExecStartPre=/bin/rm -f %t/documenso-app.pid %t/documenso-app.ctr-id
