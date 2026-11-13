@@ -17,7 +17,8 @@ reponame="documenso"
 # Node.js 25+ no longer ships Corepack, install it from npm
 # renovate: datasource=npm packageName=corepack
 corepack_version=0.36.0
-APP_VERSION="v2.13.0"
+# renovate: datasource=docker packageName=docker.io/documenso/documenso
+APP_VERSION=v2.13.0
 
 # Create a new empty container image
 container=$(buildah from scratch)
@@ -50,7 +51,8 @@ buildah config --entrypoint=/ \
 	--label="org.nethserver.authorizations=traefik@node:routeadm" \
 	--label="org.nethserver.tcp-ports-demand=1" \
 	--label="org.nethserver.rootfull=0" \
-	--label="org.nethserver.images=docker.io/postgres:15.5-alpine3.19 docker.io/documenso/documenso:${APP_VERSION}" \
+    --label="org.nethserver.min-core=3.0.0" \
+	--label="org.nethserver.images=docker.io/postgres:18.7-alpine3.24 docker.io/documenso/documenso:${APP_VERSION}" \
 	"${container}"
 # Commit the image
 buildah commit "${container}" "${repobase}/${reponame}"
