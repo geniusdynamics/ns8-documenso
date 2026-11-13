@@ -1,9 +1,13 @@
 {
   "name": "Documenso",
   "description": {
-    "en": "Document igning Finally Opensource"
+    "en": "Documenso is an open source document signing platform to send, sign and track contracts and other documents.",
+    "it": "Documenso è una piattaforma open source di firma dei documenti per inviare, firmare e seguire contratti e altri documenti."
   },
-  "categories": [],
+  "categories": [
+    "office",
+    "security"
+  ],
   "authors": [
     {
       "name": "Genius Dynamics",
