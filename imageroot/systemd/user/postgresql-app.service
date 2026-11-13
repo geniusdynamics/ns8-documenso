@@ -13,6 +13,7 @@ Environment=PODMAN_SYSTEMD_UNIT=%n
 EnvironmentFile=%E/state/environment
 # EnvironmentFile=%E/state/secrets/passwords.secret
 Restart=always
+RestartSec=10
 TimeoutStopSec=70
 ExecStartPre=/bin/rm -f %t/postgresql-app.pid %t/postgresql-app.ctr-id
 ExecStartPre=/bin/mkdir -p %E/state/restore/
