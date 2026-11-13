@@ -20,7 +20,7 @@ ExecStart=/usr/bin/podman run --conmon-pidfile %t/postgresql-app.pid \
     --cidfile %t/postgresql-app.ctr-id --cgroups=no-conmon \
     --pod-id-file %t/documenso.pod-id --replace -d --name postgresql-app \
     --env-file=%E/state/database.env \
-    --volume postgres-data:/var/lib/postgresql/data:Z \
+    --volume postgres-data:/var/lib/postgresql:Z \
     --volume %E/state/restore/:/docker-entrypoint-initdb.d/:Z \
     --env TZ=UTC \
     ${POSTGRES_IMAGE}
